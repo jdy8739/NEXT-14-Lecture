@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <main className="w-screen h-screen flex justify-center items-center">
-      <div className="inline-block p-4 w-80 h-44 rounded-2xl bg-white drop-shadow-xl">
+      <div className="inline-block p-4 w-full max-w-screen-sm h-44 rounded-2xl bg-white drop-shadow-xl">
         <div className="flex justify-between">
           <div>
             <p>In transit</p>
@@ -11,8 +11,8 @@ export default function Home() {
         </div>
 
         <div className="mt-2">
-          <span className="px-3 py-1 mr-2 rounded-xl text-sm bg-green-300 text-white">
-            TODAY
+          <span className="px-3 py-1 mr-2 rounded-xl text-sm bg-green-300 text-white transition uppercase hover:bg-green-600 hover:scale-125">
+            Today
           </span>
           <span>9:30-10:30u</span>
         </div>
