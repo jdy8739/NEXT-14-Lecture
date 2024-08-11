@@ -10,26 +10,12 @@ body {
 
 /** exteds the reset styles */
 @layer base {
-  * {
-    @apply text-slate-600;
-  }
-}
-
-/** we can make custom styles globally */
-.my-input {
-  @apply outline-none ring ring-transparent ring-gray-200 bg-red-100;
 }
 
 /** also we can make the custom styles like below which is going to be used such as m-5, text-blue-500 */
 @layer utilities {
-  .my-font {
-    @apply font-extrabold text-orange-600 text-3xl;
-  }
 }
 
 /** this makes just the combination of styles */
 @layer components {
-  .bg-rainbow {
-    @apply bg-gradient-to-br from-red-500 to-purple-500 via-yellow-500;
-  }
 }
