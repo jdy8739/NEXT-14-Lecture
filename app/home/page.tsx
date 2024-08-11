@@ -22,15 +22,18 @@ export default function Home() {
           flex-col
           justify-between"
       >
-        {['jack', 'kane', 'yonet', 'linn'].map((name, index) => {
+        {['jack', 'kane', 'yonet', ''].map((name, index) => {
           return (
-            <div key={name} className="p-2 flex items-center *:animate-pulse">
+            <div key={name} className="p-2 flex items-center ">
               <div className="size-8 bg-cyan-600 rounded-full" />
               <div className="ml-3">
-                <span className="inline-block w-28 h-3 rounded-md bg-gray-400"></span>
+                <span className="text-lg font-medium empty:w-20 empty:h-3 empty:bg-gray-400 empty:rounded-md">
+                  {name}
+                </span>
               </div>
-              <div className="ml-3">
-                <span className="inline-block w-10 h-3 rounded-md bg-gray-400"></span>
+              <div className="ml-3 bg-red-500 size-5 rounded-full flex justify-center items-center text-white relative">
+                <span className="absolute size-5 rounded-full bg-red-500 animate-ping"></span>
+                <span>{index}</span>
               </div>
             </div>
           );
