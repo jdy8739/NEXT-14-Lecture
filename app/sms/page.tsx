@@ -1,8 +1,6 @@
 import FormInput from '@/components/form-input/FormInput';
 import FormButton from '@/components/form-btn/FormButton';
 
-import SocialLogin from '@/components/social-login.tsx/SocialLogin';
-
 const SMSLogIn = () => {
   return (
     <main className="h-full flex items-center justify-center">
