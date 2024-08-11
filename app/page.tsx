@@ -1,8 +1,33 @@
 export default function Home() {
   return (
-    <main className="w-screen h-screen flex justify-center items-center ">
-      <div className="p-4 w-full max-w-screen-sm h-36 rounded-2xl bg-white drop-shadow-xl flex flex-col justify-between">
-        <div>
+    <main
+      className="
+      w-screen
+      h-screen
+      flex
+      justify-center
+      items-center
+      bg-red-200
+      md:bg-green-200
+      lg:bg-cyan-200"
+    >
+      <div
+        className="
+        p-4
+        md:p-2
+        w-full
+        h-36
+        md:h-16
+        max-w-screen-sm
+        rounded-2xl
+        bg-white
+        drop-shadow-xl
+        flex
+        flex-col
+        md:flex-row  
+        justify-between"
+      >
+        <div className="md:w-10/12">
           <input
             placeholder="Search here"
             className="
@@ -20,11 +45,12 @@ export default function Home() {
             placeholder:drop-shadow"
           />
         </div>
-        <div>
+        <div className="md:w-2/12 md:ml-2">
           <button
             className="
             w-full
             h-10
+            md:h-12
             rounded-full
             bg-slate-700
             text-white
