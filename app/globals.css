@@ -18,4 +18,14 @@ body {
 
 /** this makes just the combination of styles */
 @layer components {
+  .primary-btn {
+    @apply w-full
+      py-3
+      rounded-lg 
+      text-sm 
+      font-semibold
+      bg-orange-500 
+      hover:bg-orange-400 
+      transition-colors;
+  }
 }
