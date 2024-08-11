@@ -7,9 +7,7 @@ export default function Home() {
         flex
         justify-center
         items-center
-        bg-red-200
-        md:bg-green-200
-        lg:bg-cyan-200"
+        bg-rainbow"
     >
       <div
         className="
@@ -21,13 +19,15 @@ export default function Home() {
           flex
           flex-col
           justify-between
-          group"
+          group
+          ml-a-lot
+          text-lavendar"
       >
-        <input className="outline-none ring ring-transparent ring-gray-200" />
+        <input className="my-input" />
         <div className="group-focus-within:block hidden">
           Make sure it is a valid email.
         </div>
-        <button>submit</button>
+        <button className="my-font">submit</button>
       </div>
     </main>
   );
