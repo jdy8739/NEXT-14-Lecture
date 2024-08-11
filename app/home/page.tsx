@@ -14,30 +14,20 @@ export default function Home() {
       <div
         className="
           w-4/12
-          h-60
+          h-28
           p-4
           bg-white
           rounded-xl
           flex
           flex-col
-          justify-between"
+          justify-between
+          group"
       >
-        {['jack', 'kane', 'yonet', ''].map((name, index) => {
-          return (
-            <div key={name} className="p-2 flex items-center ">
-              <div className="size-8 bg-cyan-600 rounded-full" />
-              <div className="ml-3">
-                <span className="text-lg font-medium empty:w-20 empty:h-3 empty:bg-gray-400 empty:rounded-md">
-                  {name}
-                </span>
-              </div>
-              <div className="ml-3 bg-red-500 size-5 rounded-full flex justify-center items-center text-white relative">
-                <span className="absolute size-5 rounded-full bg-red-500 animate-ping"></span>
-                <span>{index}</span>
-              </div>
-            </div>
-          );
-        })}
+        <input className="outline-none ring ring-transparent ring-gray-200" />
+        <div className="group-focus-within:block hidden">
+          Make sure it is a valid email.
+        </div>
+        <button>submit</button>
       </div>
     </main>
   );
