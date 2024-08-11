@@ -24,16 +24,13 @@ export default function Home() {
       >
         {['jack', 'kane', 'yonet', 'linn'].map((name, index) => {
           return (
-            <div
-              key={name}
-              className="p-2 flex items-center odd:bg-slate-200 even:bg-blue-100 rounded-lg border-b-2 border-gray-400 last:border-b-0"
-            >
+            <div key={name} className="p-2 flex items-center *:animate-pulse">
               <div className="size-8 bg-cyan-600 rounded-full" />
               <div className="ml-3">
-                <span>{name}</span>
+                <span className="inline-block w-28 h-3 rounded-md bg-gray-400"></span>
               </div>
-              <div className="ml-3 bg-red-500 size-5 rounded-full flex justify-center items-center text-white">
-                <span>{index}</span>
+              <div className="ml-3">
+                <span className="inline-block w-10 h-3 rounded-md bg-gray-400"></span>
               </div>
             </div>
           );
