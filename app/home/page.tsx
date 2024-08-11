@@ -13,71 +13,31 @@ export default function Home() {
     >
       <div
         className="
+          w-4/12
+          h-60
           p-4
-          md:p-2
-          w-full
-          h-36
-          md:h-16
-          max-w-screen-sm
-          rounded-2xl
           bg-white
-          drop-shadow-xl
+          rounded-xl
           flex
           flex-col
-          md:flex-row  
-          justify-between
-          *:outline-none
-          has-[:invalid]:bg-red-100
-          ring
-          ring-transparent
-          transition-shadow
-          has-[:invalid]:ring-red-700"
+          justify-between"
       >
-        <input
-          placeholder="Search here"
-          type="email"
-          className="
-              w-full
-              md:w-10/12
-              h-12
-              px-5
-              rounded-full
-              ring
-              ring-transparent
-              ring-offset-2
-              valid:ring-green-400
-              invalid:ring-red-400
-              transition-shadow
-              placeholder:drop-shadow
-              peer"
-        />
-        <div className="hidden text-red-400 peer-invalid:block">
-          Email is required
-        </div>
-        <button
-          className="
-              w-full
-              md:w-2/12 md:ml-2
-              h-10
-              md:h-12
-              rounded-full
-              bg-slate-700
-              text-white
-              uppercase
-              transition-transform
-              peer-valid:bg-gradient-to-tl
-              from-cyan-200
-              via-green-200
-              to-purple-300
-              active:scale-90
-              focus:bg-opacity-30
-              focus:scale-90
-              peer-invalid:bg-slate-200
-              peer-invalid:cursor-not-allowed
-              font-medium"
-        >
-          log in
-        </button>
+        {['jack', 'kane', 'yonet', 'linn'].map((name, index) => {
+          return (
+            <div
+              key={name}
+              className="p-2 flex items-center odd:bg-slate-200 even:bg-blue-100 rounded-lg border-b-2 border-gray-400 last:border-b-0"
+            >
+              <div className="size-8 bg-cyan-600 rounded-full" />
+              <div className="ml-3">
+                <span>{name}</span>
+              </div>
+              <div className="ml-3 bg-red-500 size-5 rounded-full flex justify-center items-center text-white">
+                <span>{index}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </main>
   );
