@@ -2,7 +2,7 @@ interface FormInputProps {
   type: string;
   placeholder: string;
   required: boolean;
-  errors: string[];
+  errors?: string[];
   name: HTMLInputElement['name'];
 }
 
@@ -10,7 +10,7 @@ const FormInput = ({
   type,
   placeholder,
   required,
-  errors,
+  errors = [],
   name,
 }: FormInputProps) => {
   return (

@@ -1,9 +1,28 @@
+'use client';
+
+import { CreateAccountForm, createAccount } from './action';
+
+import { useFormState } from 'react-dom';
+
 import FormInput from '@/components/form-input/FormInput';
 import FormButton from '@/components/form-btn/FormButton';
 
 import SocialLogin from '@/components/social-login.tsx/SocialLogin';
 
+const INITIAL_FORM_STATE: CreateAccountForm = {
+  userName: '',
+  email: '',
+  password: '',
+  passwordConfirm: '',
+} as const;
+
 const CreateAccountPage = () => {
+  const [formState, dispatch] = useFormState<
+    CreateAccountForm & {
+      errors?: Record<keyof CreateAccountForm, string[] | undefined>;
+    }
+  >(createAccount as any, INITIAL_FORM_STATE);
+
   return (
     <main className="h-full flex items-center justify-center">
       <div className="w-96 h-4/6 p-5 flex flex-col gap-8">
@@ -13,34 +32,34 @@ const CreateAccountPage = () => {
             Fill in the form below to join!
           </div>
         </div>
-        <form className="flex flex-col gap-3">
+        <form className="flex flex-col gap-3" action={dispatch}>
           <FormInput
             type="text"
             name="userName"
             placeholder="Username"
             required={true}
-            errors={['']}
+            errors={formState.errors?.userName}
           />
           <FormInput
             type="email"
             name="email"
             placeholder="Email"
             required={true}
-            errors={['']}
+            errors={formState.errors?.email}
           />
           <FormInput
             type="password"
             name="password"
             placeholder="Confirm Password"
             required={true}
-            errors={['']}
+            errors={formState.errors?.password}
           />
           <FormInput
             type="password"
             name="passwordConfirm"
             placeholder="Password"
             required={true}
-            errors={['']}
+            errors={formState.errors?.passwordConfirm}
           />
           <FormButton text="Create account" />
         </form>
