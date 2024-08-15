@@ -42,7 +42,7 @@ const CreateAccountPage = () => {
             required={true}
             errors={['']}
           />
-          <FormButton loading={false} text="Create account" />
+          <FormButton text="Create account" />
         </form>
         <SocialLogin />
       </div>
