@@ -8,11 +8,11 @@ import FormButton from '@/components/form-btn/FormButton';
 import { TOKEN_MAX, TOKEN_MIN } from '@/libs/constants';
 
 const SMSLogIn = () => {
-  const [state, action] = useFormState<
-    SmsLoginForm & { errors?: Record<keyof SmsLoginForm, string[] | undefined> }
-  >(loginSms as any, {
-    phone: '',
-    token: null,
+  const [state, action] = useFormState<{
+    errors?: Record<keyof SmsLoginForm, string[] | undefined>;
+    isValidPhone: boolean;
+  }>(loginSms as any, {
+    isValidPhone: false,
   });
 
   return (
@@ -23,23 +23,28 @@ const SMSLogIn = () => {
           <div className="text-lg font-semibold">Verify your phone number.</div>
         </div>
         <form className="flex flex-col gap-3" action={action}>
-          <FormInput
-            type="number"
-            name="phone"
-            placeholder="Phone number"
-            required={true}
-            errors={state.errors?.phone}
+          {state.isValidPhone ? (
+            <FormInput
+              type="number"
+              name="token"
+              placeholder="Verification code"
+              required={true}
+              errors={state.errors?.token}
+              min={TOKEN_MIN}
+              max={TOKEN_MAX}
+            />
+          ) : (
+            <FormInput
+              type="number"
+              name="phone"
+              placeholder="Phone number"
+              required={true}
+              errors={state.errors?.phone}
+            />
+          )}
+          <FormButton
+            text={state.isValidPhone ? 'verify sms' : 'verify phone'}
           />
-          <FormInput
-            type="number"
-            name="token"
-            placeholder="Verification code"
-            required={true}
-            errors={state.errors?.token}
-            min={TOKEN_MIN}
-            max={TOKEN_MAX}
-          />
-          <FormButton text="Verify" />
         </form>
       </div>
     </main>
