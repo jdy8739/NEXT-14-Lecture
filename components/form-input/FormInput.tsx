@@ -3,9 +3,16 @@ interface FormInputProps {
   placeholder: string;
   required: boolean;
   errors: string[];
+  name: HTMLInputElement['name'];
 }
 
-const FormInput = ({ type, placeholder, required, errors }: FormInputProps) => {
+const FormInput = ({
+  type,
+  placeholder,
+  required,
+  errors,
+  name,
+}: FormInputProps) => {
   return (
     <div className="flex flex-col gap-2">
       <input
@@ -23,6 +30,7 @@ const FormInput = ({ type, placeholder, required, errors }: FormInputProps) => {
         text-neutral-300
         placeholder:text-neutral-500"
         type={type}
+        name={name}
         placeholder={placeholder}
         required={required}
       />

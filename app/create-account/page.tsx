@@ -13,33 +13,37 @@ const CreateAccountPage = () => {
             Fill in the form below to join!
           </div>
         </div>
-        <div className="flex flex-col gap-3">
+        <form className="flex flex-col gap-3">
           <FormInput
             type="text"
+            name="userName"
             placeholder="Username"
             required={true}
             errors={['']}
           />
           <FormInput
             type="email"
+            name="email"
             placeholder="Email"
             required={true}
             errors={['']}
           />
           <FormInput
             type="password"
+            name="password"
             placeholder="Confirm Password"
             required={true}
             errors={['']}
           />
           <FormInput
             type="password"
+            name="passwordConfirm"
             placeholder="Password"
             required={true}
             errors={['']}
           />
           <FormButton loading={false} text="Create account" />
-        </div>
+        </form>
         <SocialLogin />
       </div>
     </main>
