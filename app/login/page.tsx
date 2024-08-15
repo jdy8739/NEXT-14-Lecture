@@ -5,15 +5,18 @@ import { useFormState } from 'react-dom';
 import SocialLogin from '@/components/social-login.tsx/SocialLogin';
 import FormInput from '@/components/form-input/FormInput';
 import FormButton from '@/components/form-btn/FormButton';
-import { handleAction } from './action';
+import { LoginForm, handleAction } from './action';
+import { PASSWORD_MIN, PASSWORD_REGEX } from '@/libs/constants';
 
 const Login = () => {
-  const [state, action] = useFormState<{ errors: string[] }>(
-    handleAction as any,
-    {
-      errors: [],
-    },
-  );
+  const [state, action] = useFormState<
+    LoginForm & {
+      errors?: Record<keyof LoginForm, string[] | undefined>;
+    }
+  >(handleAction as any, {
+    email: '',
+    password: '',
+  });
 
   return (
     <main className="h-full flex items-center justify-center">
@@ -30,14 +33,15 @@ const Login = () => {
             name="email"
             placeholder="Email"
             required={true}
-            errors={['']}
+            errors={state.errors?.email}
           />
           <FormInput
             type="password"
             name="password"
             placeholder="Password"
             required={true}
-            errors={state.errors}
+            min={PASSWORD_MIN}
+            errors={state.errors?.password}
           />
           <FormButton text="Create account" />
         </form>

@@ -9,6 +9,7 @@ import {
   USERNAME_MIN,
   BASIC_CREATE_ACCOUNT_FORM_PARAMS,
 } from '@/libs/constants';
+import { mockServerWait } from '@/libs/utils';
 
 const refineUsername = (userName: string) => !userName.includes('admin');
 
@@ -46,9 +47,6 @@ const createAccountFormScheme = z
   });
 
 type CreateAccountForm = z.infer<typeof createAccountFormScheme>;
-
-const mockServerWait = () =>
-  new Promise((resolve) => setTimeout(resolve, 1500));
 
 const createAccount = async (
   prevData: CreateAccountForm,
