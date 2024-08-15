@@ -25,6 +25,7 @@ const SMSLogIn = () => {
         <form className="flex flex-col gap-3" action={action}>
           {state.isValidPhone ? (
             <FormInput
+              key="token"
               type="number"
               name="token"
               placeholder="Verification code"
@@ -35,6 +36,7 @@ const SMSLogIn = () => {
             />
           ) : (
             <FormInput
+              key="phone"
               type="number"
               name="phone"
               placeholder="Phone number"

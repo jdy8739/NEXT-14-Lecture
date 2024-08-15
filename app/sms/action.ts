@@ -15,7 +15,16 @@ const phoneScheme = z
     path: ['phone'],
   });
 
-const tokenScheme = z.coerce.number().min(TOKEN_MIN).max(TOKEN_MAX);
+const tokenScheme = z.coerce
+  .number()
+  .refine((value) => value > TOKEN_MIN, {
+    message: `token must be bigger than ${TOKEN_MIN}`,
+    path: ['token'],
+  })
+  .refine((value) => value < TOKEN_MAX, {
+    message: `token must be smaller than ${TOKEN_MAX}`,
+    path: ['token'],
+  });
 
 const smsLoginScheme = z.object({ phone: phoneScheme, token: tokenScheme });
 
@@ -35,7 +44,11 @@ const loginSms = async (
     if (tokenValidation.success) {
       return redirect('/');
     } else {
-      return prevData;
+      console.log(tokenValidation.error.flatten());
+      return {
+        ...prevData,
+        errors: tokenValidation.error.flatten().fieldErrors,
+      };
     }
   }
 
