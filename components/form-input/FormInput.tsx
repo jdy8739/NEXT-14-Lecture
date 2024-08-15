@@ -34,11 +34,13 @@ const FormInput = ({
         placeholder={placeholder}
         required={required}
       />
-      {errors.map((error, index) => (
-        <div key={`${error}_${index}`} className="text-sm text-red-500">
-          {error}
-        </div>
-      ))}
+      <ul className="list-disc px-4">
+        {errors.map((error, index) => (
+          <li key={`${error}_${index}`} className="text-sm text-red-500">
+            {error}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
