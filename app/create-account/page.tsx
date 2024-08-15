@@ -9,6 +9,8 @@ import FormButton from '@/components/form-btn/FormButton';
 
 import SocialLogin from '@/components/social-login.tsx/SocialLogin';
 
+import { PASSWORD_MIN, USERNAME_MAX, USERNAME_MIN } from '@/libs/constants';
+
 const INITIAL_FORM_STATE: CreateAccountForm = {
   userName: '',
   email: '',
@@ -39,6 +41,8 @@ const CreateAccountPage = () => {
             placeholder="Username"
             required={true}
             errors={formState.errors?.userName}
+            min={USERNAME_MIN}
+            max={USERNAME_MAX}
           />
           <FormInput
             type="email"
@@ -53,6 +57,7 @@ const CreateAccountPage = () => {
             placeholder="Confirm Password"
             required={true}
             errors={formState.errors?.password}
+            min={PASSWORD_MIN}
           />
           <FormInput
             type="password"
@@ -60,6 +65,7 @@ const CreateAccountPage = () => {
             placeholder="Password"
             required={true}
             errors={formState.errors?.passwordConfirm}
+            min={PASSWORD_MIN}
           />
           <FormButton text="Create account" />
         </form>

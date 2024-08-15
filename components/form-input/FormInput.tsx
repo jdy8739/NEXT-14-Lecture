@@ -1,4 +1,6 @@
-interface FormInputProps {
+import { InputHTMLAttributes } from 'react';
+
+interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   type: string;
   placeholder: string;
   required: boolean;
@@ -6,13 +8,7 @@ interface FormInputProps {
   name: HTMLInputElement['name'];
 }
 
-const FormInput = ({
-  type,
-  placeholder,
-  required,
-  errors = [],
-  name,
-}: FormInputProps) => {
+const FormInput = ({ errors = [], name, ...rest }: FormInputProps) => {
   return (
     <div className="flex flex-col gap-2">
       <input
@@ -29,10 +25,8 @@ const FormInput = ({
         rounded-md
         text-neutral-300
         placeholder:text-neutral-500"
-        type={type}
         name={name}
-        placeholder={placeholder}
-        required={required}
+        {...rest}
       />
       <ul className="list-disc px-4">
         {errors.map((error, index) => (
