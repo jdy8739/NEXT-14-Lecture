@@ -11,7 +11,7 @@ import {
 } from '@/libs/constants';
 import db from '@/libs/db';
 import { mockServerWait } from '@/libs/utils';
-import { createSession } from '@/libs/session';
+import { getSession } from '@/libs/session';
 import { redirect } from 'next/navigation';
 
 const refineEmail = async (email: string) => {
@@ -67,10 +67,10 @@ const handleAction = async (prevData: LoginForm, formData: FormData) => {
     );
 
     if (passwordIdentical) {
-      const cookie = await createSession();
+      const session = await getSession();
 
-      cookie.id = user!.id;
-      await cookie.save();
+      session.id = user!.id;
+      await session.save();
 
       redirect('/profile');
     } else {
