@@ -10,6 +10,7 @@ import {
   BASIC_CREATE_ACCOUNT_FORM_PARAMS,
 } from '@/libs/constants';
 import { mockServerWait } from '@/libs/utils';
+import db from '@/libs/db';
 
 const refineUsername = (userName: string) => !userName.includes('admin');
 
@@ -21,6 +22,32 @@ const refinePasswordConfirm = ({
   passwordConfirm: string;
 }) => password === passwordConfirm;
 
+const refineUniqueUserName = async (userName: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username: userName,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return !user;
+};
+
+const refineUniqueEmail = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return !user;
+};
+
 const createAccountFormScheme = z
   .object({
     userName: z
@@ -29,10 +56,13 @@ const createAccountFormScheme = z
       .max(USERNAME_MAX, 'User name must be shorter than 11')
       .refine(refineUsername, {
         message: 'User name cannot include word admin',
-      }),
+      })
+      .refine(refineUniqueUserName, { message: 'duplicate username!' }),
     email: z
       .string(BASIC_CREATE_ACCOUNT_FORM_PARAMS)
-      .email({ message: 'email must be form of an email' }),
+      .toLowerCase()
+      .email({ message: 'email must be form of an email' })
+      .refine(refineUniqueEmail, { message: 'duplicate email!' }),
     password: z
       .string(BASIC_CREATE_ACCOUNT_FORM_PARAMS)
       .min(USERNAME_MIN)
@@ -54,12 +84,19 @@ const createAccount = async (
 ) => {
   await mockServerWait();
 
-  const data = Object.keys(prevData).reduce(
+  const data: Record<string, unknown> = Object.keys(prevData).reduce(
     (a, b) => ({ ...a, [b]: formData.get(b) }),
     {},
   );
 
-  const validationResult = createAccountFormScheme.safeParse(data);
+  const validationResult = await createAccountFormScheme.safeParseAsync(data);
+
+  if (validationResult.success) {
+    return {
+      /** data in result exists only when success case happens */
+      ...validationResult.data,
+    };
+  }
 
   return {
     ...data,
