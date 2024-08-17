@@ -1,5 +1,6 @@
 'use server';
 
+import bcrypt from 'bcrypt';
 import { z } from 'zod';
 
 import {
@@ -9,8 +10,12 @@ import {
   USERNAME_MIN,
   BASIC_CREATE_ACCOUNT_FORM_PARAMS,
 } from '@/libs/constants';
-import { mockServerWait } from '@/libs/utils';
+
 import db from '@/libs/db';
+import { mockServerWait } from '@/libs/utils';
+import { createSession } from '@/libs/session';
+
+import { redirect } from 'next/navigation';
 
 const refineUsername = (userName: string) => !userName.includes('admin');
 
@@ -92,10 +97,29 @@ const createAccount = async (
   const validationResult = await createAccountFormScheme.safeParseAsync(data);
 
   if (validationResult.success) {
-    return {
-      /** data in result exists only when success case happens */
-      ...validationResult.data,
-    };
+    const hashedPassword = await bcrypt.hash(
+      validationResult.data.password,
+      12,
+    );
+
+    /** data in result exists only when success case happens */
+    const createdUser = await db.user.create({
+      data: {
+        username: validationResult.data.userName,
+        email: validationResult.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const cookie = await createSession();
+
+    cookie.id = createdUser.id;
+    await cookie.save();
+
+    redirect('/home');
   }
 
   return {
