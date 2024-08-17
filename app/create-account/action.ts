@@ -37,7 +37,7 @@ const refineUniqueUserName = async (userName: string) => {
     },
   });
 
-  return !user;
+  return !!user?.id;
 };
 
 const refineUniqueEmail = async (email: string) => {
@@ -50,7 +50,7 @@ const refineUniqueEmail = async (email: string) => {
     },
   });
 
-  return !user;
+  return !!user?.id;
 };
 
 const createAccountFormScheme = z
@@ -61,13 +61,11 @@ const createAccountFormScheme = z
       .max(USERNAME_MAX, 'User name must be shorter than 11')
       .refine(refineUsername, {
         message: 'User name cannot include word admin',
-      })
-      .refine(refineUniqueUserName, { message: 'duplicate username!' }),
+      }),
     email: z
       .string(BASIC_CREATE_ACCOUNT_FORM_PARAMS)
       .toLowerCase()
-      .email({ message: 'email must be form of an email' })
-      .refine(refineUniqueEmail, { message: 'duplicate email!' }),
+      .email({ message: 'email must be form of an email' }),
     password: z
       .string(BASIC_CREATE_ACCOUNT_FORM_PARAMS)
       .min(USERNAME_MIN)
@@ -75,6 +73,31 @@ const createAccountFormScheme = z
     passwordConfirm: z
       .string(BASIC_CREATE_ACCOUNT_FORM_PARAMS)
       .min(USERNAME_MIN),
+  })
+  .superRefine(async ({ userName }, ctx) => {
+    const userExists = await refineUniqueUserName(userName);
+
+    if (userExists) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['userName'],
+        message: 'duplicate username!',
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const userExists = await refineUniqueEmail(email);
+
+    if (userExists) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['email'],
+        message: 'duplicate email!',
+        fatal: true,
+      });
+    }
   })
   .refine(refinePasswordConfirm, {
     message: 'password confirm must be same with password',

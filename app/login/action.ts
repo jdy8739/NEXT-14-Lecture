@@ -68,7 +68,9 @@ const handleAction = async (prevData: LoginForm, formData: FormData) => {
 
     if (passwordIdentical) {
       const cookie = await createSession();
+
       cookie.id = user!.id;
+      await cookie.save();
 
       redirect('/profile');
     } else {
