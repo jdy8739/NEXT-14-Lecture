@@ -8,7 +8,7 @@ const SocialLogin = () => {
       <div className="flex flex-col gap-3">
         <div>
           <Link
-            href="/sms"
+            href="/github/start"
             className="text-center flex justify-center gap-3 primary-btn"
           >
             <svg

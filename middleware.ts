@@ -8,6 +8,8 @@ const URLS_PUBLIC_ONLY: Record<string, boolean> = {
   '/create-account': true,
   '/login': true,
   '/profile': false,
+  '/github/start': true,
+  '/github/complete': true,
 } as const;
 
 const middleware = async (request: NextRequest) => {
