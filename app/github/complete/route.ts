@@ -1,5 +1,5 @@
 import db from '@/libs/db';
-import { getSession } from '@/libs/session';
+import { updateSession } from '@/libs/session';
 import { notFound, redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
 
@@ -56,9 +56,7 @@ export const GET = async (request: NextRequest) => {
   });
 
   if (user) {
-    const session = await getSession();
-    session.id = user!.id;
-    await session.save();
+    await updateSession(user!.id);
   } else {
     const newUser = await db.user.create({
       data: {
@@ -71,9 +69,7 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
-    const session = await getSession();
-    session.id = newUser!.id;
-    await session.save();
+    await updateSession(newUser!.id);
   }
 
   return redirect('/profile');

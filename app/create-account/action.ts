@@ -13,7 +13,7 @@ import {
 
 import db from '@/libs/db';
 import { mockServerWait } from '@/libs/utils';
-import { getSession } from '@/libs/session';
+import { updateSession } from '@/libs/session';
 
 import { redirect } from 'next/navigation';
 
@@ -137,10 +137,7 @@ const createAccount = async (
       },
     });
 
-    const session = await getSession();
-
-    session.id = createdUser.id;
-    await session.save();
+    await updateSession(createdUser!.id);
 
     redirect('/home');
   }
