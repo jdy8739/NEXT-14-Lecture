@@ -23,7 +23,7 @@ const middleware = async (request: NextRequest) => {
     }
   } else {
     if (isPublicRequest) {
-      return NextResponse.redirect(new URL('/products', request.url));
+      return NextResponse.redirect(new URL('/profile', request.url));
     }
   }
 };
