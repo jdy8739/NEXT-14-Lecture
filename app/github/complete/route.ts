@@ -3,6 +3,24 @@ import { updateSession } from '@/libs/session';
 import { notFound, redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
 
+const fetchUserData = async <T>({
+  accessToken,
+  endPoint = '',
+}: {
+  accessToken: string;
+  endPoint?: string;
+}) => {
+  const userData = await (
+    await fetch(`https://api.github.com/user${endPoint}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  ).json();
+
+  return userData as T;
+};
+
 export const GET = async (request: NextRequest) => {
   const code = request.nextUrl.searchParams.get('code');
 
@@ -38,17 +56,23 @@ export const GET = async (request: NextRequest) => {
     return new Response(null, { status: 400 });
   }
 
-  const { login, id, avatar_url } = await (
-    await fetch('https://api.github.com/user', {
-      headers: {
-        Authorization: `Bearer ${accessTokenResponse.access_token}`,
-      },
-    })
-  ).json();
+  const { login, id, avatar_url } = await fetchUserData<{
+    login: string;
+    id: number;
+    avatar_url: string;
+  }>({ accessToken: accessTokenResponse.access_token });
 
-  const user = await db.user.findUnique({
+  const emailAddresses = await fetchUserData<
+    [
+      {
+        email: string;
+      },
+    ]
+  >({ accessToken: accessTokenResponse.access_token, endPoint: '/emails' });
+
+  const user = await db.user.findFirst({
     where: {
-      github_id: String(id),
+      OR: [{ github_id: String(id) }, { email: emailAddresses[0].email }],
     },
     select: {
       id: true,
@@ -63,6 +87,7 @@ export const GET = async (request: NextRequest) => {
         username: `gh-${login}`,
         github_id: String(id),
         avatar: avatar_url,
+        email: emailAddresses[0].email,
       },
       select: {
         id: true,

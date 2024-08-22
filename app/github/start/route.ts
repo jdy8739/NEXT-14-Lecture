@@ -6,7 +6,7 @@ export const GET = () => {
   const params = {
     client_id: process.env.GITHUB_CLIENT_ID!,
     allow_signup: 'true',
-    scope: 'read:user, user:email',
+    scope: 'read:user,user:email',
   };
 
   const formattedParams = new URLSearchParams(params).toString();
