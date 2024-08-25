@@ -22,7 +22,7 @@ const TabBar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="h-16 p-2 grid grid-cols-5 border-neutral-600 border-t-2">
+    <nav className="h-18 p-2 grid grid-cols-5 bg-neutral-800 border-neutral-600 border-t-2 sticky bottom-0">
       <span className="text-center">
         <Link href="/products">
           {pathname === '/products' ? (
