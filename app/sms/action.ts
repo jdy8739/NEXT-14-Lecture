@@ -1,11 +1,32 @@
 'use server';
 
 import validator from 'validator';
+import crypto from 'crypto';
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 
 import { mockServerWait } from '@/libs/utils';
 import { TOKEN_MAX, TOKEN_MIN } from '@/libs/constants';
+import db from '@/libs/db';
+
+const getToken = async (): Promise<string> => {
+  const token = String(crypto.randomInt(100000, 999999));
+
+  const exist = await db.sMSToken.findUnique({
+    where: {
+      token: token,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (exist) {
+    return await getToken();
+  }
+
+  return token;
+};
 
 const phoneScheme = z
   .string()
@@ -36,8 +57,6 @@ const loginSms = async (
 ) => {
   await mockServerWait();
 
-  const phoneValidation = phoneScheme.safeParse(formData.get('phone'));
-
   if (prevData.isValidPhone) {
     const tokenValidation = tokenScheme.safeParse(formData.get('token'));
 
@@ -52,7 +71,36 @@ const loginSms = async (
     }
   }
 
+  const phoneValidation = phoneScheme.safeParse(formData.get('phone'));
+
   if (phoneValidation.success) {
+    await db.sMSToken.deleteMany({
+      where: {
+        user: {
+          phone: phoneValidation.data,
+        },
+      },
+    });
+
+    const token = await getToken();
+
+    await db.sMSToken.create({
+      data: {
+        token,
+        user: {
+          connectOrCreate: {
+            where: {
+              phone: phoneValidation.data,
+            },
+            create: {
+              username: crypto.randomBytes(10).toString('hex'),
+              phone: phoneValidation.data,
+            },
+          },
+        },
+      },
+    });
+
     return { isValidPhone: true };
   } else {
     return {

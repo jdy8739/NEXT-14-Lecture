@@ -10,6 +10,7 @@ const URLS_PUBLIC_ONLY: Record<string, boolean> = {
   '/profile': false,
   '/github/start': true,
   '/github/complete': true,
+  '/sms': true,
 } as const;
 
 const middleware = async (request: NextRequest) => {
