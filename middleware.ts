@@ -7,10 +7,14 @@ const URLS_PUBLIC_ONLY: Record<string, boolean> = {
   '/home': true,
   '/create-account': true,
   '/login': true,
-  '/profile': false,
   '/github/start': true,
   '/github/complete': true,
   '/sms': true,
+  '/chats': false,
+  '/life': false,
+  '/live': false,
+  '/products': false,
+  '/profile': false,
 } as const;
 
 const middleware = async (request: NextRequest) => {
