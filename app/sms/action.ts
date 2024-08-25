@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { mockServerWait } from '@/libs/utils';
 import { TOKEN_MAX, TOKEN_MIN } from '@/libs/constants';
 import db from '@/libs/db';
+import { updateSession } from '@/libs/session';
 
 const getToken = async (): Promise<string> => {
   const token = String(crypto.randomInt(100000, 999999));
@@ -28,6 +29,19 @@ const getToken = async (): Promise<string> => {
   return token;
 };
 
+const refineTokne = async (token: number) => {
+  const exist = await db.sMSToken.findUnique({
+    where: {
+      token: String(token),
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return !!exist;
+};
+
 const phoneScheme = z
   .string()
   .trim()
@@ -45,6 +59,10 @@ const tokenScheme = z.coerce
   .refine((value) => value < TOKEN_MAX, {
     message: `token must be smaller than ${TOKEN_MAX}`,
     path: ['token'],
+  })
+  .refine(refineTokne, {
+    message: 'This token does not exist!',
+    path: ['token'],
   });
 
 const smsLoginScheme = z.object({ phone: phoneScheme, token: tokenScheme });
@@ -58,12 +76,28 @@ const loginSms = async (
   await mockServerWait();
 
   if (prevData.isValidPhone) {
-    const tokenValidation = tokenScheme.safeParse(formData.get('token'));
+    const tokenValidation = await tokenScheme.safeParseAsync(
+      formData.get('token'),
+    );
 
     if (tokenValidation.success) {
+      const smsToken = await db.sMSToken.findUnique({
+        where: {
+          token: String(tokenValidation.data),
+        },
+        select: {
+          id: true,
+          userId: true,
+        },
+      });
+
+      if (smsToken) {
+        updateSession(smsToken.userId);
+        await db.sMSToken.delete({ where: { id: smsToken.id } });
+      }
+
       return redirect('/');
     } else {
-      console.log(tokenValidation.error.flatten());
       return {
         ...prevData,
         errors: tokenValidation.error.flatten().fieldErrors,
