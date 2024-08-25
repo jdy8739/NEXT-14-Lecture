@@ -5,10 +5,10 @@ import crypto from 'crypto';
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 
-import { mockServerWait } from '@/libs/utils';
 import { TOKEN_MAX, TOKEN_MIN } from '@/libs/constants';
 import db from '@/libs/db';
 import { updateSession } from '@/libs/session';
+import { sendSmsMessage } from '@/libs/sms';
 
 const getToken = async (): Promise<string> => {
   const token = String(crypto.randomInt(100000, 999999));
@@ -73,8 +73,6 @@ const loginSms = async (
   prevData: SmsLoginForm & { isValidPhone: boolean },
   formData: FormData,
 ) => {
-  await mockServerWait();
-
   if (prevData.isValidPhone) {
     const tokenValidation = await tokenScheme.safeParseAsync(
       formData.get('token'),
@@ -84,6 +82,7 @@ const loginSms = async (
       const smsToken = await db.sMSToken.findUnique({
         where: {
           token: String(tokenValidation.data),
+          phone: prevData.phone,
         },
         select: {
           id: true,
@@ -121,6 +120,7 @@ const loginSms = async (
     await db.sMSToken.create({
       data: {
         token,
+        phone: phoneValidation.data,
         user: {
           connectOrCreate: {
             where: {
@@ -134,6 +134,8 @@ const loginSms = async (
         },
       },
     });
+
+    sendSmsMessage(token);
 
     return { isValidPhone: true };
   } else {
