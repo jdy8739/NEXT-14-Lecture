@@ -17,7 +17,7 @@ const getProducts = async () => {
 };
 
 const ProductsPage = async () => {
-  await new Promise((resolve) => setTimeout(() => resolve(null), 3000));
+  await new Promise((resolve) => setTimeout(() => resolve(null), 1000));
 
   const products = await getProducts();
 

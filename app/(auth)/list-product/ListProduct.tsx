@@ -1,3 +1,4 @@
+import { formatToTimeAgo, formatToWon } from '@/libs/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -34,9 +35,9 @@ const ListProduct = ({
       <div className="w-40 flex flex-col gap-2">
         <span>{title}</span>
         <span className="text-sm text-neutral-400">
-          {created_at.toString()}
+          {formatToTimeAgo(created_at.getTime())}
         </span>
-        <span>{price}</span>
+        <span>{formatToWon(price)} WON</span>
       </div>
     </Link>
   );
