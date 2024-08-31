@@ -3,7 +3,7 @@ const ProductDetailPage = async ({
 }: {
   params: { id: string };
 }) => {
-  await new Promise((resolve) => setTimeout(() => resolve(null), 10000));
+  await new Promise((resolve) => setTimeout(() => resolve(null), 1000));
 
   return <div>hi {id}</div>;
 };
