@@ -19,7 +19,8 @@ const Loading = () => {
           </div>
         </div>
         <div className="mt-5">
-          <div className="w-56 h-4 bg-neutral-700 rounded-sm"></div>
+          <p className="w-56 h-4 bg-neutral-700 rounded-sm"></p>
+          <p className="w-full h-4 mt-2 bg-neutral-700 rounded-sm"></p>
         </div>
       </div>
     </div>
