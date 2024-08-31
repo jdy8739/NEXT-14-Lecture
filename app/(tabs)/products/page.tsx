@@ -1,4 +1,4 @@
-import ListProduct from '@/app/(auth)/list-product/ListProduct';
+import ListProduct from '@/components/list-product/ListProduct';
 import db from '@/libs/db';
 
 const getProducts = async () => {
