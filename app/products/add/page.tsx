@@ -6,6 +6,8 @@ import { PhotoIcon } from '@heroicons/react/24/solid';
 import { useCallback, useState } from 'react';
 import { uploadProduct } from './action';
 
+const MAX_FILE_SIZE = 4 * 1024 * 1024;
+
 const AddProduct = () => {
   const [preview, setPreview] = useState('');
 
@@ -16,7 +18,11 @@ const AddProduct = () => {
       if (file) {
         const blobURL = URL.createObjectURL(file);
 
-        setPreview(blobURL);
+        if (file.size > MAX_FILE_SIZE) {
+          alert('File size too big!!!');
+        } else {
+          setPreview(blobURL);
+        }
       }
     },
     [],
@@ -44,6 +50,7 @@ const AddProduct = () => {
             name="photo"
             type="file"
             accept="image/*"
+            required
             onChange={handleOnChange}
           />
         </label>
