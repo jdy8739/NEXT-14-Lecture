@@ -45,7 +45,6 @@ const ProductList = ({ initialProducts }: Props) => {
     }
 
     return () => {
-      console.log('??!!');
       io.disconnect();
     };
   }, [onLoadMoreProducts]);
