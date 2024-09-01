@@ -18,13 +18,25 @@ const ProductList = ({ initialProducts }: Props) => {
   const onLoadMoreProducts = useCallback(async () => {
     const moreProducts = await getMoreProducts(productList.length);
 
-    setProductList((prev) => [...prev, ...moreProducts]);
+    if (moreProducts.length) {
+      setProductList((prev) => [...prev, ...moreProducts]);
+    }
+
+    return !!moreProducts.length;
   }, [productList]);
 
   useEffect(() => {
-    const io = new IntersectionObserver(([trigger]) => {
+    const io = new IntersectionObserver(async ([trigger]) => {
       if (trigger && trigger.isIntersecting) {
-        onLoadMoreProducts();
+        const isMoreProduct = await onLoadMoreProducts();
+
+        if (!isMoreProduct) {
+          if (triggerDivRef.current) {
+            io.unobserve(triggerDivRef.current);
+          }
+
+          io.disconnect();
+        }
       }
     });
 
@@ -33,6 +45,7 @@ const ProductList = ({ initialProducts }: Props) => {
     }
 
     return () => {
+      console.log('??!!');
       io.disconnect();
     };
   }, [onLoadMoreProducts]);
