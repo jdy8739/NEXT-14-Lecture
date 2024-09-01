@@ -4,7 +4,6 @@ import db from '@/libs/db';
 import { Prisma } from '@prisma/client';
 
 const getInitialProducts = async () => {
-  console.log('hit!!');
   const products = await db.product.findMany({
     select: {
       id: true,
@@ -23,9 +22,11 @@ const getInitialProducts = async () => {
   return products;
 };
 
-const getCachedInitialProducts = nextCache(getInitialProducts, [
-  'home-products',
-]);
+const getCachedInitialProducts = nextCache(
+  getInitialProducts,
+  ['home-products'],
+  { revalidate: 30 },
+);
 
 type ProductListType = Prisma.PromiseReturnType<typeof getInitialProducts>;
 
