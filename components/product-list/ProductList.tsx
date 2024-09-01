@@ -2,7 +2,7 @@
 
 import { ProductListType } from '@/app/(tabs)/products/page';
 import ListProduct from '../list-product/ListProduct';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getMoreProducts } from '@/app/(tabs)/products/action';
 
 interface Props {
@@ -10,21 +10,41 @@ interface Props {
 }
 
 const ProductList = ({ initialProducts }: Props) => {
+  const triggerDivRef = useRef<HTMLDivElement>(null);
+
   const [productList, setProductList] =
     useState<ProductListType>(initialProducts);
 
-  const onLoadMoreProducts = async () => {
+  const onLoadMoreProducts = useCallback(async () => {
     const moreProducts = await getMoreProducts(productList.length);
 
     setProductList((prev) => [...prev, ...moreProducts]);
-  };
+  }, [productList]);
+
+  useEffect(() => {
+    const io = new IntersectionObserver(([trigger]) => {
+      if (trigger && trigger.isIntersecting) {
+        onLoadMoreProducts();
+      }
+    });
+
+    if (triggerDivRef.current) {
+      io.observe(triggerDivRef.current);
+    }
+
+    return () => {
+      io.disconnect();
+    };
+  }, [onLoadMoreProducts]);
 
   return (
-    <div>
+    <div className="h-[300vh] relative">
       {productList.map((product) => (
         <ListProduct key={product.id} {...product} />
       ))}
-      <button onClick={onLoadMoreProducts}>load more</button>
+      <div ref={triggerDivRef} className="w-full absolute bottom-0 text-center">
+        observer trigger
+      </div>
     </div>
   );
 };
