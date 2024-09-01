@@ -1,4 +1,13 @@
+import { Metadata } from 'next';
 import './globals.css';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Karrot Market',
+    default: 'Karrot Market',
+  },
+  description: 'Sell and buy all the things!',
+};
 
 export default function RootLayout({
   children,

@@ -2,6 +2,7 @@ import db from '@/libs/db';
 import { getSession } from '@/libs/session';
 import { formatToWon } from '@/libs/utils';
 import { UserIcon } from '@heroicons/react/16/solid';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
@@ -21,6 +22,19 @@ export const getProduct = async (id: number) => {
   });
 
   return product;
+};
+
+export const generateMetadata = async ({
+  params: { id },
+}: {
+  params: { id: string };
+}): Promise<Metadata> => {
+  const product = await getProduct(Number(id));
+
+  return {
+    title: product?.title,
+    description: product?.description,
+  };
 };
 
 const getIsOwner = async (userId: number) => {
