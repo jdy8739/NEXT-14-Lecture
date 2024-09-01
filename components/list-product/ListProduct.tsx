@@ -35,7 +35,7 @@ const ListProduct = ({
       <div className="w-40 flex flex-col gap-2">
         <span>{title}</span>
         <span className="text-sm text-neutral-400">
-          {formatToTimeAgo(created_at.getTime())}
+          {formatToTimeAgo(new Date(created_at).getTime())}
         </span>
         <span>{formatToWon(price)} WON</span>
       </div>
