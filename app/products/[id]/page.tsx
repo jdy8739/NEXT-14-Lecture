@@ -5,7 +5,7 @@ import { UserIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
-const getProduct = async (id: number) => {
+export const getProduct = async (id: number) => {
   const product = await db.product.findUnique({
     where: {
       id,
