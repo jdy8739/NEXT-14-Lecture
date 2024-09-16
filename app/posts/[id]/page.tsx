@@ -1,7 +1,9 @@
 import db from '@/libs/db';
+import { getSession } from '@/libs/session';
 import { formatToTimeAgo } from '@/libs/utils';
 import { HandThumbUpIcon } from '@heroicons/react/16/solid';
 import { EyeIcon } from '@heroicons/react/24/solid';
+import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
@@ -39,17 +41,72 @@ const getPost = async (id: number) => {
 };
 
 const PostDetail = async ({ params: { id } }: { params: { id: string } }) => {
-  const numberID = Number(id);
+  const postID = Number(id);
 
-  if (isNaN(numberID)) {
+  if (isNaN(postID)) {
     notFound();
   }
 
-  const post = await getPost(numberID);
+  const post = await getPost(postID);
 
   if (!post) {
     notFound();
   }
+
+  const getIsLiked = async () => {
+    'use server';
+
+    const session = await getSession();
+
+    const isLiked = await db.like.findUnique({
+      where: {
+        id: {
+          postId: postID,
+          userId: session.id,
+        },
+      },
+    });
+
+    return !!isLiked;
+  };
+
+  const likePost = async () => {
+    'use server';
+
+    const session = await getSession();
+
+    try {
+      await db.like.create({
+        data: {
+          postId: postID,
+          userId: session.id,
+        },
+      });
+    } finally {
+      revalidatePath(`/posts/${postID}`);
+    }
+  };
+
+  const dislikePost = async () => {
+    'use server';
+
+    const session = await getSession();
+
+    try {
+      await db.like.delete({
+        where: {
+          id: {
+            postId: postID,
+            userId: session.id,
+          },
+        },
+      });
+    } finally {
+      revalidatePath(`/posts/${postID}`);
+    }
+  };
+
+  const isLiked = await getIsLiked();
 
   return (
     <div className="p-4 flex flex-col gap-3">
@@ -71,11 +128,13 @@ const PostDetail = async ({ params: { id } }: { params: { id: string } }) => {
         <EyeIcon className="size-6 inline-block" />
         <span>조회 {post.views}</span>
       </div>
-      <div className="*:text-neutral-500">
-        <button className="p-3 ring-1 ring-neutral-400 flex items-center gap-2 rounded-full">
-          <HandThumbUpIcon className="size-6" />
-          <span>공감하기 ({post._count.likes})</span>
-        </button>
+      <div className="*:text-neutral-400">
+        <form action={isLiked ? dislikePost : likePost}>
+          <button className="p-3 ring-1 ring-neutral-400 flex items-center gap-2 rounded-full">
+            <HandThumbUpIcon className="size-6" />
+            <span>공감하기 ({post._count.likes})</span>
+          </button>
+        </form>
       </div>
     </div>
   );
