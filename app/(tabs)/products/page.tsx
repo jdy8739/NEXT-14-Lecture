@@ -3,6 +3,10 @@ import nextCache from '@/libs/cache';
 import db from '@/libs/db';
 import { Prisma } from '@prisma/client';
 
+// export const dynamic = 'force-dynamic';
+
+export const revalidate = 60;
+
 const getInitialProducts = async () => {
   const products = await db.product.findMany({
     select: {
