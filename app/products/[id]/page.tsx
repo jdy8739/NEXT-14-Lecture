@@ -37,10 +37,13 @@ export const generateMetadata = async ({
   };
 };
 
+// note: Serverside functions using cookies cannot use generateStaticParams below
+// and prevent pages from being generated as static pages.
 const getIsOwner = async (userId: number) => {
-  const session = await getSession();
+  // const session = await getSession();
 
-  return session.id === userId;
+  // return session.id === userId;
+  return false;
 };
 
 const ProductDetailPage = async ({
@@ -113,6 +116,16 @@ const ProductDetailPage = async ({
       </div>
     </div>
   );
+};
+
+// note: generate static pages by presetting potential parameters
+export const generateStaticParams = async () => {
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return products.map((product) => ({ id: product.id + '' }));
 };
 
 export default ProductDetailPage;
