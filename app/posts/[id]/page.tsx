@@ -1,11 +1,9 @@
+import LikeButton from '@/components/like-button/LikeButtont';
 import nextCache from '@/libs/cache';
 import db from '@/libs/db';
 import { getSession } from '@/libs/session';
 import { formatToTimeAgo } from '@/libs/utils';
-import { HandThumbUpIcon } from '@heroicons/react/16/solid';
-import { HandThumbUpIcon as HandThumbUpIconOutline } from '@heroicons/react/24/outline';
 import { EyeIcon } from '@heroicons/react/24/solid';
-import { revalidateTag } from 'next/cache';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
@@ -98,42 +96,6 @@ const PostDetail = async ({ params: { id } }: { params: { id: string } }) => {
 
   const { isLiked, likeCount } = await getCachedLikeStatus(postID, session.id);
 
-  const likePost = async () => {
-    'use server';
-
-    const session = await getSession();
-
-    try {
-      await db.like.create({
-        data: {
-          postId: postID,
-          userId: session.id,
-        },
-      });
-    } finally {
-      revalidateTag(`post-like-${postID}`);
-    }
-  };
-
-  const dislikePost = async () => {
-    'use server';
-
-    const session = await getSession();
-
-    try {
-      await db.like.delete({
-        where: {
-          id: {
-            postId: postID,
-            userId: session.id,
-          },
-        },
-      });
-    } finally {
-      revalidateTag(`post-like-${postID}`);
-    }
-  };
-
   return (
     <div className="p-4 flex flex-col gap-3">
       <div className="flex gap-3">
@@ -155,19 +117,7 @@ const PostDetail = async ({ params: { id } }: { params: { id: string } }) => {
         <span>조회 {post.views}</span>
       </div>
       <div className="*:text-neutral-400">
-        <form action={isLiked ? dislikePost : likePost}>
-          {isLiked ? (
-            <button className="p-3 flex items-center gap-2 rounded-full bg-orange-500 text-neutral-50">
-              <HandThumbUpIcon className="size-6" />
-              <span>({likeCount})</span>
-            </button>
-          ) : (
-            <button className="p-3 ring-1 ring-neutral-400 flex items-center gap-2 rounded-full">
-              <HandThumbUpIconOutline className="size-6" />
-              <span>공감하기 ({likeCount})</span>
-            </button>
-          )}
-        </form>
+        <LikeButton isLiked={isLiked} likeCount={likeCount} postId={postID} />
       </div>
     </div>
   );
