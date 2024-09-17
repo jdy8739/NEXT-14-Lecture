@@ -13,6 +13,8 @@ const getRoom = async (id: string) => {
       users: {
         select: {
           id: true,
+          avatar: true,
+          username: true,
         },
       },
     },
@@ -57,9 +59,22 @@ const ChatRoomPage = async ({ params: { id } }: { params: { id: string } }) => {
 
   const messages = await getMessages(id);
 
+  const userData = chatroom.users.find((user) => user.id === session.id);
+
+  const roomOwnerData = chatroom.users.find((user) => user.id !== session.id);
+
   return (
     <div className="p-4 h-full">
-      <MessageList initalMessages={messages} sessionId={session.id} />
+      <MessageList
+        initalMessages={messages}
+        sessionId={session.id}
+        chatroomId={id}
+        userAvatar={userData!.avatar!}
+        username={userData!.username}
+        roomOwnerId={roomOwnerData!.id}
+        roomOwnerAvatar={roomOwnerData!.avatar}
+        roomOwnerName={roomOwnerData!.username}
+      />
     </div>
   );
 };
