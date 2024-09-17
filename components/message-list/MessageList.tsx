@@ -1,5 +1,6 @@
 'use client';
 
+import { saveMessage } from '@/app/(tabs)/chats/[id]/action';
 import { MessageType } from '@/app/(tabs)/chats/[id]/page';
 import { formatToTimeAgo } from '@/libs/utils';
 import { ArrowUpCircleIcon } from '@heroicons/react/16/solid';
@@ -35,7 +36,7 @@ const MessageList = ({
   const [messages, setMessages] = useState(initalMessages);
 
   const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const payload = inputRef.current!.value;
@@ -69,6 +70,8 @@ const MessageList = ({
           event: 'message',
           payload: { payload },
         });
+
+        await saveMessage(payload, chatroomId);
 
         inputRef.current!.value = '';
       }
