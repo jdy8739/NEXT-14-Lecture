@@ -4,7 +4,7 @@ import { formatToWon } from '@/libs/utils';
 import { UserIcon } from '@heroicons/react/16/solid';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 export const getProduct = async (id: number) => {
   const product = await db.product.findUnique({
@@ -40,10 +40,9 @@ export const generateMetadata = async ({
 // note: Serverside functions using cookies cannot use generateStaticParams below
 // and prevent pages from being generated as static pages.
 const getIsOwner = async (userId: number) => {
-  // const session = await getSession();
+  const session = await getSession();
 
-  // return session.id === userId;
-  return false;
+  return session.id === userId;
 };
 
 const ProductDetailPage = async ({
@@ -66,6 +65,25 @@ const ProductDetailPage = async ({
   }
 
   const isOwner = await getIsOwner(product.userId);
+
+  const createChatroom = async () => {
+    'use server';
+
+    const session = await getSession();
+
+    const chatroom = await db.chatRoom.create({
+      data: {
+        users: {
+          connect: [{ id: product.id }, { id: session.id }],
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    redirect(`/chats/${chatroom.id}`);
+  };
 
   return (
     <div className="h-full">
@@ -109,9 +127,11 @@ const ProductDetailPage = async ({
             삭제하기
           </button>
         ) : (
-          <button className="p-2 bg-orange-500 rounded-md font-semibold">
-            채팅하기
-          </button>
+          <form action={createChatroom}>
+            <button className="p-2 bg-orange-500 rounded-md font-semibold">
+              채팅하기
+            </button>
+          </form>
         )}
       </div>
     </div>
