@@ -58,7 +58,7 @@ const ChatRoomPage = async ({ params: { id } }: { params: { id: string } }) => {
   const messages = await getMessages(id);
 
   return (
-    <div className="p-4">
+    <div className="p-4 h-full">
       <MessageList initalMessages={messages} sessionId={session.id} />
     </div>
   );
