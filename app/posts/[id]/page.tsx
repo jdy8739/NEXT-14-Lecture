@@ -63,6 +63,7 @@ const getLikeStatus = async (postId: number, userId: number) => {
 
 const getCachedPostDetail = nextCache(getPost, ['post-detail'], {
   tags: ['post-detail'],
+  revalidate: 5,
 });
 
 const getCachedLikeStatus = (
@@ -95,6 +96,8 @@ const PostDetail = async ({ params: { id } }: { params: { id: string } }) => {
   const session = await getSession();
 
   const { isLiked, likeCount } = await getCachedLikeStatus(postID, session.id);
+
+  console.log(post);
 
   return (
     <div className="p-4 flex flex-col gap-3">
