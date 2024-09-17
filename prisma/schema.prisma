@@ -26,8 +26,10 @@ model User {
   tokens     SMSToken[]
   products   Product[]
   posts      Post[]
-  Comment    Comment[]
-  Like       Like[]
+  comments   Comment[]
+  likes      Like[]
+  chat_rooms ChatRoom[]
+  messages   Message[]
 }
 
 model SMSToken {
@@ -49,7 +51,6 @@ model Product {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
 }
-
 model Post {
   id          Int     @id @default(autoincrement())
   title       String
@@ -62,7 +63,6 @@ model Post {
   comments Comment[]
   likes    Like[]
 }
-
 model Comment {
   id      Int    @id @default(autoincrement())
   payload String
@@ -73,7 +73,6 @@ model Comment {
   userId Int
   postId Int
 }
-
 model Like {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -82,4 +81,23 @@ model Like {
   userId Int
   postId Int
   @@id(name: "id", [userId, postId])
+}
+
+model ChatRoom {
+  id    String @id @default(cuid())
+  users User[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  messages   Message[]
+}
+
+model Message {
+  id      Int    @id @default(autoincrement())
+  payload String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  room       ChatRoom @relation(fields: [chatRoomId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  chatRoomId String
+  userId     Int
 }
