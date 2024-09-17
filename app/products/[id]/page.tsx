@@ -118,7 +118,7 @@ const ProductDetailPage = async ({
       </div>
       <div className="p-4">
         <div className="flex gap-2">
-          <div className="size-9 flex justify-center items-center overflow-hidden rounded-full border-orange-500 border-2">
+          <div className="size-9 flex justify-center items-center overflow-hidden rounded-full border-orange-500 border-2 relative">
             {product.user.avatar ? (
               <Image
                 src={product.user.avatar}
