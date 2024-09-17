@@ -74,7 +74,7 @@ const ProductDetailPage = async ({
     const chatroom = await db.chatRoom.create({
       data: {
         users: {
-          connect: [{ id: product.id }, { id: session.id }],
+          connect: [{ id: product.userId }, { id: session.id }],
         },
       },
       select: {
