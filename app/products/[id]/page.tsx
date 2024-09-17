@@ -71,10 +71,14 @@ const ProductDetailPage = async ({
 
     const session = await getSession();
 
-    const chatroom = await db.chatRoom.create({
-      data: {
+    const existingChatRoom = await db.chatRoom.findFirst({
+      where: {
         users: {
-          connect: [{ id: product.userId }, { id: session.id }],
+          every: {
+            id: {
+              in: [product.userId, session.id],
+            },
+          },
         },
       },
       select: {
@@ -82,7 +86,22 @@ const ProductDetailPage = async ({
       },
     });
 
-    redirect(`/chats/${chatroom.id}`);
+    if (!existingChatRoom) {
+      const chatroom = await db.chatRoom.create({
+        data: {
+          users: {
+            connect: [{ id: product.userId }, { id: session.id }],
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      redirect(`/chats/${chatroom.id}`);
+    }
+
+    redirect(`/chats/${existingChatRoom.id}`);
   };
 
   return (
